@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from prometheus_flask_exporter import PrometheusMetrics
 import psycopg2
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
+metrics = PrometheusMetrics(app)  # Enable metrics for all endpoints
 
 # Database connection details
 DB_HOST = "database"

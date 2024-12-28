@@ -2,4 +2,6 @@ Flask==2.3.3
 Werkzeug==2.3.7
 psycopg2-binary==2.9.7
 Flask-CORS==3.0.10
+prometheus-flask-exporter==0.21.0
+
 
