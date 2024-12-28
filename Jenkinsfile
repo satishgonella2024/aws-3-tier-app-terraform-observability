@@ -35,6 +35,7 @@ pipeline {
         stage('Push Docker Images') {
             steps {
                 script {
+                    sh 'docker login -u satish2024 -p $DOCKER_PASSWORD'
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
                         docker.image("${env.REPO_NAME}-backend").push('latest')
                         docker.image("${env.REPO_NAME}-frontend").push('latest')
