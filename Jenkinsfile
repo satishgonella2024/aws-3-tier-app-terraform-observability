@@ -8,17 +8,26 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: "git@github.com:${REPO_NAME_GITHUB}.git"
+                script {
+                    echo "Checking out code from GitHub..."
+                    git branch: 'main', url: "git@github.com:${REPO_NAME_GITHUB}.git"
+                }
             }
         }
         stage('Build Backend Image') {
             steps {
-                docker.build("${env.REPO_NAME_DOCKER_BACKEND}", './backend')
+                script {
+                    echo "Building backend Docker image..."
+                    docker.build("${env.REPO_NAME_DOCKER_BACKEND}", './backend')
+                }
             }
         }
         stage('Build Frontend Image') {
             steps {
-                docker.build("${env.REPO_NAME_DOCKER_FRONTEND}", './frontend')
+                script {
+                    echo "Building frontend Docker image..."
+                    docker.build("${env.REPO_NAME_DOCKER_FRONTEND}", './frontend')
+                }
             }
         }
         stage('Test Backend') {
@@ -45,32 +54,45 @@ pipeline {
         }
         stage('Push Docker Images') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'docker-hub-credentials',
-                    passwordVariable: 'DOCKER_PASSWORD',
-                    usernameVariable: 'DOCKER_USERNAME'
-                )]) {
-                    sh '''
-                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                        docker tag ${REPO_NAME_DOCKER_BACKEND}:latest ${DOCKER_USERNAME}/${REPO_NAME_DOCKER_BACKEND}:latest
-                        docker push ${DOCKER_USERNAME}/${REPO_NAME_DOCKER_BACKEND}:latest
-                        docker tag ${REPO_NAME_DOCKER_FRONTEND}:latest ${DOCKER_USERNAME}/${REPO_NAME_DOCKER_FRONTEND}:latest
-                        docker push ${DOCKER_USERNAME}/${REPO_NAME_DOCKER_FRONTEND}:latest
-                        docker logout
-                    '''
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'docker-hub-credentials',
+                        passwordVariable: 'DOCKER_PASSWORD',
+                        usernameVariable: 'DOCKER_USERNAME'
+                    )]) {
+                        sh '''
+                            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                            
+                            echo "Pushing backend Docker image..."
+                            docker tag ${REPO_NAME_DOCKER_BACKEND}:latest ${DOCKER_USERNAME}/${REPO_NAME_DOCKER_BACKEND}:latest
+                            docker push ${DOCKER_USERNAME}/${REPO_NAME_DOCKER_BACKEND}:latest
+                            
+                            echo "Pushing frontend Docker image..."
+                            docker tag ${REPO_NAME_DOCKER_FRONTEND}:latest ${DOCKER_USERNAME}/${REPO_NAME_DOCKER_FRONTEND}:latest
+                            docker push ${DOCKER_USERNAME}/${REPO_NAME_DOCKER_FRONTEND}:latest
+                            
+                            docker logout
+                        '''
+                    }
                 }
             }
         }
     }
     post {
         always {
-            sh 'docker image prune -f || true'
+            script {
+                sh 'docker image prune -f || true'
+            }
         }
         success {
-            echo 'Pipeline completed successfully!'
+            script {
+                echo 'Pipeline completed successfully!'
+            }
         }
         failure {
-            echo 'Pipeline failed!'
+            script {
+                echo 'Pipeline failed!'
+            }
         }
     }
 }
