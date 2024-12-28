@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import psycopg2
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 # Database connection details
 DB_HOST = "database"
