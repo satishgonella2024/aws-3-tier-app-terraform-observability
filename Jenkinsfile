@@ -46,7 +46,7 @@ pipeline {
                 script {
                     echo "Testing frontend..."
                     sh '''
-                        docker build -t frontend-test ./frontend
+                        docker build --target test -t frontend-test ./frontend
                         docker run --rm frontend-test npm test -- --watchAll=false
                     '''
                 }
