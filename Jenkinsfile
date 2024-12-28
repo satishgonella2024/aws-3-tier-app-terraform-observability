@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        REPO_NAME_GITHUB = "satishgonella2024/aws-3-tier-app" // For GitHub
+        REPO_NAME_GITHUB = "satishgonella2024/aws-3-tier-app-terraform-observability" // For GitHub 
         REPO_NAME_DOCKER_BACKEND = "satish2024/aws-3-tier-app-backend" // Docker Hub backend repo
         REPO_NAME_DOCKER_FRONTEND = "satish2024/aws-3-tier-app-frontend" // Docker Hub frontend repo
     }
