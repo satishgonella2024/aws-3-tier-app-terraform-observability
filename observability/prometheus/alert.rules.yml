@@ -1,0 +1,20 @@
+groups:
+  - name: Backend Alerts
+    rules:
+      - alert: HighErrorRate
+        expr: rate(flask_http_request_total{status="500"}[1m]) > 0.1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate detected in backend"
+          description: "Error rate is > 10% for the last minute."
+
+      - alert: SlowResponse
+        expr: rate(flask_http_request_duration_seconds_sum[1m]) / rate(flask_http_request_duration_seconds_count[1m]) > 0.5
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Slow response time in backend"
+          description: "Average response time > 500ms over the last minute."
