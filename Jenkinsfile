@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('docker-hub-credentials') // Docker Hub credentials in Jenkins
+        DOCKERHUB_CREDENTIALS = 'docker-hub-credentials'
         REPO_NAME = "satishgonella2024/aws-3-tier-app"
     }
     stages {
