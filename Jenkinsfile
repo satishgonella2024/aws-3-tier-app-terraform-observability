@@ -35,7 +35,7 @@ pipeline {
         stage('Push Docker Images') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
                         docker.image("${env.REPO_NAME}-backend").push('latest')
                         docker.image("${env.REPO_NAME}-frontend").push('latest')
                     }
