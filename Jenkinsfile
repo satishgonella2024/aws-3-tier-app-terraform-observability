@@ -24,6 +24,14 @@ pipeline {
                 }
             }
         }
+        stage('Test Credentials') {
+            steps {
+                script {
+                    echo "Using credentials ID: ${DOCKERHUB_CREDENTIALS}"
+                }
+            }
+        }
+
         stage('Push Docker Images') {
             steps {
                 script {
