@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        REPO_NAME_GITHUB = "satishgonella2024/aws-3-tier-app-terraform-observability" // GitHub repo
-        REPO_NAME_DOCKER_BACKEND = "aws-3-tier-app-backend" // Docker Hub backend repo
-        REPO_NAME_DOCKER_FRONTEND = "aws-3-tier-app-frontend" // Docker Hub frontend repo
+        REPO_NAME_GITHUB = "satishgonella2024/aws-3-tier-app-terraform-observability"
+        REPO_NAME_DOCKER_BACKEND = "aws-3-tier-app-backend"
+        REPO_NAME_DOCKER_FRONTEND = "aws-3-tier-app-frontend"
     }
     stages {
         stage('Checkout Code') {
@@ -20,14 +20,6 @@ pipeline {
                 }
             }
         }
-        stage('Build Frontend Image') {
-            steps {
-                script {
-                    echo "Building frontend Docker image..."
-                    docker.build("${env.REPO_NAME_DOCKER_FRONTEND}", './frontend')
-                }
-            }
-        }
         stage('Test Backend') {
             steps {
                 script {
@@ -36,6 +28,14 @@ pipeline {
                         docker build -t backend-test ./backend
                         docker run --rm backend-test pytest
                     '''
+                }
+            }
+        }
+        stage('Build Frontend Image') {
+            steps {
+                script {
+                    echo "Building frontend Docker image..."
+                    docker.build("${env.REPO_NAME_DOCKER_FRONTEND}", './frontend')
                 }
             }
         }
