@@ -31,3 +31,23 @@ terraform.tfstate.backup
 
 # Grafana data
 observability/grafana/*
+
+# Ignore Terraform state files
+terraform-backend-bootstrap/terraform.tfstate
+terraform-backend-bootstrap/terraform.tfstate.backup
+
+# Ignore .terraform directories
+terraform-backend-bootstrap/.terraform/
+terraform-backend-bootstrap/.terraform.lock.hcl
+
+# Terraform state files
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+
+# Terraform plan files
+terraform/*.tfplan
+
+# Terraform directories
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+
