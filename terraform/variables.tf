@@ -23,3 +23,14 @@ variable "frontend_security_groups" {
   description = "Security groups for the frontend load balancer"
   type        = list(string)
 }
+
+variable "execution_role_arn" {
+  description = "Execution role ARN for ECS tasks"
+  type        = string
+}
+
+variable "task_role_arn" {
+  description = "Task role ARN for ECS tasks"
+  type        = string
+}
+

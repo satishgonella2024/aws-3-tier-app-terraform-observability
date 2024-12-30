@@ -115,6 +115,54 @@ resource "aws_security_group" "frontend" {
   }
 }
 
+# ECS Execution Role
+resource "aws_iam_role" "ecs_execution_role" {
+  name = "${var.project}-ecs-execution-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action    = "sts:AssumeRole"
+        Effect    = "Allow"
+        Principal = { Service = "ecs-tasks.amazonaws.com" }
+      },
+    ]
+  })
+
+  tags = {
+    Environment = var.environment
+    Project     = var.project
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_execution_role_policy" {
+  role       = aws_iam_role.ecs_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+# ECS Task Role
+resource "aws_iam_role" "ecs_task_role" {
+  name = "${var.project}-ecs-task-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action    = "sts:AssumeRole"
+        Effect    = "Allow"
+        Principal = { Service = "ecs-tasks.amazonaws.com" }
+      },
+    ]
+  })
+
+  tags = {
+    Environment = var.environment
+    Project     = var.project
+  }
+}
+
+
 # Module for Frontend Resources
 module "frontend" {
   source                  = "./frontend"
@@ -123,3 +171,17 @@ module "frontend" {
   frontend_subnets        = aws_subnet.frontend[*].id
   frontend_security_groups = [aws_security_group.frontend.id]
 }
+
+module "backend" {
+  source                  = "./backend"
+  project                 = var.project
+  environment             = var.environment
+  backend_image           = "satish2024/aws-3-tier-app-backend:latest"
+  execution_role_arn      = aws_iam_role.ecs_execution_role.arn
+  task_role_arn           = aws_iam_role.ecs_task_role.arn
+  backend_subnets         = aws_subnet.frontend[*].id
+  backend_security_groups = [aws_security_group.frontend.id]
+}
+
+
+
