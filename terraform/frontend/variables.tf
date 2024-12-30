@@ -1,16 +1,10 @@
-variable "region" {
-  description = "AWS region"
-  type        = string
-  default     = "eu-west-2"
-}
-
 variable "project" {
   description = "Project name for tagging"
   type        = string
 }
 
 variable "environment" {
-  description = "Deployment environment (e.g., dev, staging, prod)"
+  description = "Deployment environment (dev, staging, prod)"
   type        = string
 }
 
